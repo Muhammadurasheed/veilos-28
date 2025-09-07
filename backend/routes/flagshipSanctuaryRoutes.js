@@ -1197,13 +1197,29 @@ router.post('/:sessionId/leave', optionalAuthMiddleware, async (req, res) => {
     }
 
     // Remove participant from session
-    const initialCount = session.participants.length;
-    session.participants = session.participants.filter(p => p.id !== userId);
-    const removedCount = initialCount - session.participants.length;
-    
-    if (removedCount > 0) {
-      session.currentParticipants = session.participants.length;
-      await session.save();
+    // Use atomic update to prevent version conflicts
+    const result = await LiveSanctuarySession.findOneAndUpdate(
+      { 
+        id: sessionId,
+        'participants.id': userId
+      },
+      { 
+        $pull: { participants: { id: userId } },
+        $inc: { currentParticipants: -1 }
+      },
+      { 
+        new: true,
+        runValidators: true
+      }
+    );
+
+    if (result) {
+      console.log('✅ Participant removed from session:', {
+        sessionId,
+        userId,
+        remainingParticipants: result.currentParticipants
+      });
+    }
       
       console.log('✅ Participant removed from session:', {
         sessionId,

@@ -47,7 +47,12 @@ export const EnhancedChatPanel = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showMediaPreview, setShowMediaPreview] = useState(false);
   const [replyingTo, setReplyingTo] = useState<ChatMessage | null>(null);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [chatWidth, setChatWidth] = useState(400);
+  const [isResizing, setIsResizing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatPanelRef = useRef<HTMLDivElement>(null);
+  const resizeHandleRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
