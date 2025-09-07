@@ -1220,13 +1220,6 @@ router.post('/:sessionId/leave', optionalAuthMiddleware, async (req, res) => {
         remainingParticipants: result.currentParticipants
       });
     }
-      
-      console.log('✅ Participant removed from session:', {
-        sessionId,
-        userId,
-        remainingParticipants: session.currentParticipants
-      });
-    }
 
     // Update Redis cache
     await redisService.removeParticipant(sessionId, userId);
